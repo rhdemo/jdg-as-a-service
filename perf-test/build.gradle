@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE')
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.palantir.docker'
+
+// This is used as the docker image prefix (org)
+group = 'slaskawi'
+
+bootJar {
+    baseName = project.name
+}
+
+docker {
+    name "${project.group}/${jar.baseName}"
+    files jar.destinationDir
+    buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.infinispan:infinispan-bom:9.2.0.Final'
+    }
+}
+
+dependencies {
+    compile("org.infinispan:infinispan-spring-boot-starter-remote:2.0.0.Alpha1")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-devtools")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+

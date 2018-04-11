@@ -1,0 +1,16 @@
+---
+
+- name: Log into proper cluster
+  shell: oc login {{openshift_host}} --token={{openshift_token}} --insecure-skip-tls-verify=true
+
+- name: Delete project
+  shell: oc delete project {{jdg_project}}
+  ignore_errors: yes
+
+- name: Wait until the project is deleted
+  action: shell oc get projects | grep {{jdg_project}}
+  register: result
+  until: result.rc != 0
+  retries: 20
+  delay: 10
+  ignore_errors: yes

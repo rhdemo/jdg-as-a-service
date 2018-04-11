@@ -1,0 +1,15 @@
+---
+
+- name: Log into proper cluster
+  shell: oc login {{openshift_host}} --token={{openshift_token}} --insecure-skip-tls-verify=true
+
+- name: Switch to proper project
+  shell: oc project {{jdg_project}}
+
+- name: Create JDG template
+  shell: oc create -f ./roles/jdg-templates/tasks/files/jdg-template.json
+  ignore_errors: yes
+
+- name: Replace JDG template (a nice trick for create or update semantics)
+  shell: oc replace -f ./roles/jdg-templates/tasks/files/jdg-template.json
+  ignore_errors: yes

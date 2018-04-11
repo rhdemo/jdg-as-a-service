@@ -1,0 +1,37 @@
+---
+
+- name: Setting values to Stage cluster
+  set_fact:
+    openshift_host: "{{ stage_openshift_host }}"
+    openshift_token: "{{ stage_openshift_token }}"
+    jdg_project: "{{ stage_jdg_project }}"
+    site: "stage"
+
+- debug:
+    msg: "Using host {{ openshift_host }} with token {{ openshift_token }} for creating project {{ jdg_project }}"
+
+- include: load-balancers.yml
+
+- name: Setting values to AWS cluster
+  set_fact:
+    openshift_host: "{{ aws_openshift_host }}"
+    openshift_token: "{{ aws_openshift_token }}"
+    jdg_project: "{{ aws_jdg_project }}"
+    site: "aws"
+
+- debug:
+    msg: "Using host {{ openshift_host }} with token {{ openshift_token }} for creating project {{ jdg_project }}"
+
+- include: load-balancers.yml
+
+- name: Setting values to Azure cluster
+  set_fact:
+    openshift_host: "{{ azure_openshift_host }}"
+    openshift_token: "{{ azure_openshift_token }}"
+    jdg_project: "{{ azure_jdg_project }}"
+    site: "azure"
+
+- debug:
+    msg: "Using host {{ openshift_host }} with token {{ openshift_token }} for creating project {{ jdg_project }}"
+
+- include: load-balancers.yml

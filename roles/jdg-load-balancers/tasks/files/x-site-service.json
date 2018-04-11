@@ -1,0 +1,24 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "jdg-app-x-site",
+    "annotations": {
+      "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "tcp",
+      "description": "x-site replication endpoint"
+    }
+  },
+  "spec": {
+    "ports": [
+      {
+        "protocol": "TCP",
+        "port": 55200,
+        "targetPort": 55200
+      }
+    ],
+    "selector": {
+      "deploymentConfig": "jdg-app"
+    },
+    "type": "LoadBalancer"
+  }
+}

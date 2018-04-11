@@ -1,0 +1,15 @@
+---
+
+- name: Log into proper cluster
+  shell: oc login {{openshift_host}} --token={{openshift_token}} --insecure-skip-tls-verify=true
+
+- name: Switch to proper project
+  shell: oc project {{jdg_project}}
+
+- name: Set permissions to William
+  shell: oc adm policy add-role-to-user admin woliveir@redhat.com
+  ignore_errors: yes
+
+- name: Set permissions to Galder
+  shell: oc adm policy add-role-to-user admin galder@redhat.com
+  ignore_errors: yes

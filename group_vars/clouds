@@ -1,0 +1,14 @@
+# GCP aka Stage cluster
+stage_openshift_token: <<token>>
+stage_openshift_host: https://master.summit-gce.sysdeseng.com
+stage_jdg_project: infinispan
+
+# Azure
+azure_openshift_token: <<token>>
+azure_openshift_host: https://openshift-master.summit-azr.sysdeseng.com
+azure_jdg_project: infinispan-azure
+
+# AWS Cluster
+aws_openshift_token: <<token>>
+aws_openshift_host: https://openshift-master.summit-aws.sysdeseng.com
+aws_jdg_project: infinispan

@@ -1,0 +1,138 @@
+= JDG as a Service
+
+This very short demo installs JDG with cross site replication in
+ 3 different clusters - AWS, GCP and Azure.
+
+.Cloud and namespace diagram
+```
+GCP (treated as stage, namespace infinispan)-+
+                                             |
+AWS (namespace infinispan)-------------------+ Replication
+                                             |
+Azure (namespace infinispan)-----------------+
+```
+
+All three clusters work in active-active-active replication so please be aware that:
+
+* You should not write into the same key from different namespaces or clouds
+* Replication is Async, so it may take same time
+
+= How to connect
+
+For in-cluster communication use either `jdg-app-hotrod.infinispan.svc` (Hot Rod Service) or
+`jdg-app-http.infinispan.svc` (HTTP Service). Connecting from the outside of the cluster is
+currently not configured.
+
+We also expose a management interface (use `test` as username and password) located here:
+
+* http://jdg-app-management-infinispan.apps.summit-azr.sysdeseng.com
+* http://jdg-app-management-infinispan.apps.summit-gce.sysdeseng.com
+* http://jdg-app-management-infinispan.apps.summit-aws.sysdeseng.com
+
+= Deployed caches
+
+Each cache replicates dynamically to 2 other sites using async replication with timeout equal
+ to `240000` ms. Some of them, as the name suggests are indexed.
+
+So far we have deployed:
+
+* Keycloak caches:
+** work
+** sessions
+** client
+** offline
+** offline
+** action
+** login
+* Caches for Cleement and Galder:
+** tasks
+** active
+** players
+** txs
+** scores
+** objects
+* Testbed caches:
+** default
+** default0
+** default1
+** default2
+** default3
+** default4
+** default5
+** indexed0
+** indexed1
+** indexed2
+** indexed3
+** indexed4
+** indexed5
+
+== How to run it?
+
+* Have a look at `group_vars/clouds` file and edit server addresses and tokens.
+**  It is absolutely fine to use `oc cluster up`. Just use 3 different namespaces there.
+ In that case, just use `run-local.sh`.
+** The user needs to be able to create a Load Balancer Services.
+* Once you edited the file, just execute `./run.sh`.
+
+== Perf tester
+
+This project contains also a small Perf Test utility (located in `./perf-test` directory).
+It deploys a small app (Spring Boot based) and exposes it through a route. The performance
+app uses a simple REST interface to perform commands. Here are some examples:
+
+```
+## Check the number of entries in `default` cache
+curl http://jdg-perf-infinispan.apps.summit-azr.sysdeseng.com\?cmds\=check
+[2018-03-22T12:56:55.513Z] Check start
+[2018-03-22T12:56:55.657Z] Check end, Total entries: 0
+
+## Check the number of entities, load 100 payloads and check again
+curl http://jdg-perf-infinispan.apps.summit-azr.sysdeseng.com\?cmds\=check,load\(100\),check
+[2018-03-22T12:57:30.209Z] Check start
+[2018-03-22T12:57:30.218Z] Check end, Total entries: 0
+[2018-03-22T12:57:30.218Z] Load start
+[2018-03-22T12:57:30.473Z] Load end, total entries added: 100
+[2018-03-22T12:57:30.473Z] Check start
+[2018-03-22T12:57:30.476Z] Check end, Total entries: 100
+
+## Finally, some more interesting example:
+curl http://jdg-perf-infinispan.apps.summit-azr.sysdeseng.com\?cmds\=check,load\(100\),check,wait\(100\),load\(1\),check
+[2018-03-22T12:58:09.712Z] Check start
+[2018-03-22T12:58:09.717Z] Check end, Total entries: 100
+[2018-03-22T12:58:09.717Z] Load start
+[2018-03-22T12:58:09.720Z] Load end, total entries added: 1
+[2018-03-22T12:58:09.720Z] Check start
+[2018-03-22T12:58:09.723Z] Check end, Total entries: 101
+[2018-03-22T12:58:09.723Z] Wait start
+[2018-03-22T12:58:09.823Z] Wait end, total wait [ms]: 100
+[2018-03-22T12:58:09.823Z] Load start
+[2018-03-22T12:58:09.826Z] Load end, total entries added: 1
+[2018-03-22T12:58:09.826Z] Check start
+[2018-03-22T12:58:09.828Z] Check end, Total entries: 102
+```
+
+It is also possible to check cross site replication:
+
+```
+## Let's check how many entries do we have in GCP
+curl http://jdg-perf-infinispan.apps.summit-gce.sysdeseng.com\?cmds\=check
+[2018-03-22T13:01:23.624Z] Check start
+[2018-03-22T13:01:23.628Z] Check end, Total entries: 3102
+
+## Azure shows the same
+curl http://jdg-perf-infinispan.apps.summit-azr.sysdeseng.com\?cmds\=check
+[2018-03-22T13:01:33.351Z] Check start
+[2018-03-22T13:01:33.356Z] Check end, Total entries: 3102
+
+## The numbers are the same... good, let's insert something
+curl http://jdg-perf-infinispan.apps.summit-azr.sysdeseng.com\?cmds\=load\(1\),check
+[2018-03-22T13:02:07.945Z] Load start
+[2018-03-22T13:02:07.946Z] Load end, total entries added: 1
+[2018-03-22T13:02:07.946Z] Check start
+[2018-03-22T13:02:07.949Z] Check end, Total entries: 3104
+
+## The number are still the same... seems like it works ;)
+curl http://jdg-perf-infinispan.apps.summit-gce.sysdeseng.com\?cmds\=check
+[2018-03-22T13:02:22.950Z] Check start
+[2018-03-22T13:02:22.954Z] Check end, Total entries: 3104
+```

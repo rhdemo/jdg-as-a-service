@@ -1,0 +1,17 @@
+---
+
+- name: Log into proper cluster
+  shell: oc login {{openshift_host}} --token={{openshift_token}} --insecure-skip-tls-verify=true
+
+- name: Switch to proper project
+  shell: oc project {{jdg_project}}
+
+- name: Delete x-site replication service if it exists
+  shell: oc delete svc/jdg-app-x-site
+  ignore_errors: yes
+
+- name: Create x-site replication service
+  shell: echo '{{ item }}' | oc create -f -
+  with_file:
+    - "./roles/jdg-load-balancers/tasks/files/x-site-service.json"
+

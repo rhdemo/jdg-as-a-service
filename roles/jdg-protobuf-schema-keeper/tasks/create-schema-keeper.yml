@@ -1,0 +1,14 @@
+---
+
+- name: Log into proper cluster
+  shell: oc login {{openshift_host}} --token={{openshift_token}} --insecure-skip-tls-verify=true
+
+- name: Switch to proper project
+  shell: oc project {{jdg_project}}
+
+- name: Delete app (if exists)
+  shell: oc delete all --selector=app=jdg-schema-keeper --timeout=1s
+  ignore_errors: yes
+
+- name: Create Schema Keeper
+  shell: oc new-app --docker-image="galderz/scavenger-schemaer" --name=jdg-schema-keeper -e HOTROD_SERVICE_NAME=jdg-app-hotrod -e SCHEMA_CHECK_DELAY=60000

@@ -1,0 +1,26 @@
+---
+
+- name: Log into proper cluster
+  shell: oc login {{openshift_host}} --token={{openshift_token}} --insecure-skip-tls-verify=true
+
+- name: Switch to proper project
+  shell: oc project {{jdg_project}}
+
+- name: Remove app (if exists)
+  shell: oc delete all,serviceaccounts,rolebindings,secrets,templates,configmaps,daemonsets,pvc,statefulset --selector=template=jdg
+  ignore_errors: yes
+
+- name: Import image
+  shell: oc import-image --confirm slaskawi/jdg-summit
+
+- name: Create app
+  shell: oc process jdg -p NAMESPACE={{jdg_project}} -p MANAGEMENT_USER=test -p MANAGEMENT_PASSWORD=test | oc create -f -
+
+- name: Expose the managment route
+  shell: oc expose svc jdg-app-management
+
+- name: Expose REST
+  shell: oc expose svc jdg-app-http
+
+
+
