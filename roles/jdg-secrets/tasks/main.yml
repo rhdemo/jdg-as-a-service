@@ -38,7 +38,7 @@
     openshift_host: "{{ stage_openshift_host }}"
     openshift_token: "{{ stage_openshift_token }}"
     jdg_project: "{{ stage_jdg_project }}"
-    site: "stage"
+    site: "Google"
     external_address: "{{ _stage_lb_ip.stdout }}"
     discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
 
@@ -52,7 +52,7 @@
     openshift_host: "{{ aws_openshift_host }}"
     openshift_token: "{{ aws_openshift_token }}"
     jdg_project: "{{ aws_jdg_project }}"
-    site: "aws"
+    site: "Amazon"
     external_address: "{{ _aws_lb_ip.stdout }}"
     discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
 
@@ -66,7 +66,7 @@
     openshift_host: "{{ azure_openshift_host }}"
     openshift_token: "{{ azure_openshift_token }}"
     jdg_project: "{{ azure_jdg_project }}"
-    site: "azure"
+    site: "Azure"
     external_address: "{{ _azure_lb_ip.stdout }}"
     discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
 
