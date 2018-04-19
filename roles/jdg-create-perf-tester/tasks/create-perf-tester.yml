@@ -10,6 +10,9 @@
   shell: oc delete all --selector=app=jdg-perf --timeout=1s
   ignore_errors: yes
 
+- name: Import image
+  shell: oc import-image --confirm slaskawi/summit-stress-test
+
 - name: Create Perf tester
   shell: oc new-app --docker-image="slaskawi/summit-stress-test" --name=jdg-perf
 

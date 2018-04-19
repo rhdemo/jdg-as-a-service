@@ -3,7 +3,7 @@ server:
 
 cmds: 'check,load(1000),check'
 
-hotrod: 'jdg-app-hotrod.infinispan.svc:11222'
+hotrod: 'jdg-app-hotrod.datagrid.svc:11222'
 
 cache: 'default'
 
