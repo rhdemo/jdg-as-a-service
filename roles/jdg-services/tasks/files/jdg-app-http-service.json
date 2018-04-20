@@ -1,0 +1,23 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "jdg-app-http",
+    "annotations": {
+      "description": "The web servers HTTP port"
+    }
+  },
+  "spec": {
+    "ports": [
+      {
+        "protocol": "TCP",
+        "port": 8080,
+        "targetPort": 8080
+      }
+    ],
+    "selector": {
+      "deploymentConfig": "jdg-app"
+    },
+    "type": "ClusterIP"
+  }
+}

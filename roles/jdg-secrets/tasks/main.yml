@@ -38,7 +38,7 @@
     openshift_host: "{{ stage_openshift_host }}"
     openshift_token: "{{ stage_openshift_token }}"
     jdg_project: "{{ stage_jdg_project }}"
-    site: "Google"
+    site: "Private"
     external_address: "{{ _stage_lb_ip.stdout }}"
     discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
 

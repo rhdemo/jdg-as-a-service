@@ -1,0 +1,24 @@
+---
+
+- name: Log into proper cluster
+  shell: oc login {{openshift_host}} --token={{openshift_token}} --insecure-skip-tls-verify=true
+
+- name: Switch to proper project
+  shell: oc project {{jdg_project}}
+
+#- name: Delete services if they exist
+#  shell: oc delete svc/jdg-app-http svc/jdg-app-hotrod
+#  ignore_errors: yes
+
+- name: Create jdg-app-http service
+  shell: echo '{{ item }}' | oc create -f -
+  with_file:
+    - "./roles/jdg-services/tasks/files/jdg-app-http-service.json"
+  ignore_errors: yes
+
+- name: Create jdg-app-http service
+  shell: echo '{{ item }}' | oc create -f -
+  with_file:
+    - "./roles/jdg-services/tasks/files/jdg-app-hotrod-service.json"
+  ignore_errors: yes
+

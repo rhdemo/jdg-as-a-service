@@ -1,0 +1,23 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "jdg-app-hotrod",
+    "annotations": {
+      "description": "Hot Rods port."
+    }
+  },
+  "spec": {
+    "ports": [
+      {
+        "protocol": "TCP",
+        "port": 11222,
+        "targetPort": 11222
+      }
+    ],
+    "selector": {
+      "deploymentConfig": "jdg-app"
+    },
+    "type": "ClusterIP"
+  }
+}
