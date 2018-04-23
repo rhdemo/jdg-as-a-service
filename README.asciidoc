@@ -97,6 +97,20 @@ Solution: In most of the cases, Schema Keeper can't connect to Infinispan. Just 
 all Pods from `jdg-schema-keeper` Deployment. Alternatively, scale up the number of Pods
 to 3.
 
+* X-site replication is down
+
+In this case you will see errors like this:
+
+```
+21:44:57,942 ERROR [org.jgroups.protocols.relay.RELAY2] (HotRod-ServerWorker-4-3) jdg-app-0: no route to Azure: dropping message
+21:44:57,942 ERROR [org.jgroups.protocols.relay.RELAY2] (HotRod-ServerWorker-4-3) jdg-app-0: no route to Private: dropping message
+21:44:57,942 ERROR [org.jgroups.protocols.relay.RELAY2] (HotRod-ServerWorker-4-3) jdg-app-0: no route to Azure: dropping message
+```
+
+Solution: At first, wait 3 minutes. We use 3 minute timeout for `RELAY2` protocol stack.
+If that won't work, check if the Load Balancers are OK (by inspecting events). If the error
+is still there, perform full deployment.
+
 
 == Perf tester
 
