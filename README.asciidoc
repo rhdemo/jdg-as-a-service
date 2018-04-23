@@ -68,11 +68,35 @@ So far we have deployed:
 
 == How to run it?
 
-* Have a look at `group_vars/clouds` file and edit server addresses and tokens.
-**  It is absolutely fine to use `oc cluster up`. Just use 3 different namespaces there.
- In that case, just use `run-local.sh`.
-** The user needs to be able to create a Load Balancer Services.
-* Once you edited the file, just execute `./run.sh`.
+NOTE: Before running this scripts, please install Ansible (I'm using `ansible-2.5.0-2.fc27.noarch`).
+
+There are 3 types of run scripts:
+
+* `refresh.sh` - refreshes deployment on all 3 clouds. Should be used in the most of the cases.
+It doesn't remove any services exposed by Infinispan, therefore it doesn't break
+other applications.
+* `full-deployment.sh` - Removed whole project and uploads new content.
+* `local-full-deployment.sh` - deploys everything locally using `oc cluster up`.
+
+== Known bugs
+
+* Missing schema
+
+Manifests itself with errors like (the error might vary depending on the site you're looking at):
+
+```
+org.hibernate.search.bridge.BridgeException: Exception while calling bridge#set
+```
+
+```
+org.infinispan.query.remote.impl.indexing.ProtobufValueWrapperFieldBridge@313fd44c
+java.lang.IllegalArgumentException: Message descriptor not found : Player
+```
+
+Solution: In most of the cases, Schema Keeper can't connect to Infinispan. Just restart
+all Pods from `jdg-schema-keeper` Deployment. Alternatively, scale up the number of Pods
+to 3.
+
 
 == Perf tester
 

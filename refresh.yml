@@ -1,0 +1,11 @@
+---
+- hosts: clouds
+  connection: local
+  gather_facts: no
+
+  roles:
+#   - jdg-secrets
+#   - jdg-templates
+#   - jdg-app
+#   - jdg-create-perf-tester
+   - jdg-protobuf-schema-keeper

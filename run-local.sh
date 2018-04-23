@@ -1,3 +1,0 @@
-oc cluster up || true
-token=`oc whoami -t`
-ansible-playbook -i hosts site.yml --extra-vars "stage_openshift_token=$token aws_openshift_token=$token azure_openshift_token=$token stage_openshift_host=https://127.0.0.1:8443 aws_openshift_host=https://127.0.0.1:8443 azure_openshift_host=https://127.0.0.1:8443 stage_jdg_project=infinispan-stage aws_jdg_project=infinispan-aws azure_jdg_project=infinispan-azure" $*

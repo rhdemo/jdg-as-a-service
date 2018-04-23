@@ -12,3 +12,6 @@
 
 - name: Create Schema Keeper
   shell: oc new-app --docker-image="galderz/scavenger-schemaer" --name=jdg-schema-keeper -e HOTROD_SERVICE_NAME=jdg-app-hotrod -e SCHEMA_CHECK_DELAY=60000
+
+- name: Scale Schema Keeper up
+  shell: oc scale dc/jdg-schema-keeper --replicas=3

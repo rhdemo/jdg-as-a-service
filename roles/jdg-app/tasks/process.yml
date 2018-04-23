@@ -21,6 +21,7 @@
 
 - name: Expose REST
   shell: oc expose svc jdg-app-http
+  ignore_errors: yes
 
 
 

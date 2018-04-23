@@ -5,4 +5,4 @@ if [ -d "secretstuff" ]; then
   cp secretstuff/jdg/clouds ./group_vars/clouds
 fi
 
-ansible-playbook -i hosts site.yml $*
+ansible-playbook -i hosts full-deployment.yml $*
