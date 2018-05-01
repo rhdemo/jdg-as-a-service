@@ -8,7 +8,7 @@
   ignore_errors: yes
 
 - name: Wait until the project is deleted
-  action: shell oc get projects | grep {{jdg_project}}
+  action: shell oc get projects | grep "^{{jdg_project}} "
   register: result
   until: result.rc != 0
   retries: 20

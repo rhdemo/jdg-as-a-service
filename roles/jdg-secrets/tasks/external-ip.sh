@@ -2,7 +2,7 @@
 
 OPEN_CURLY="{"
 external_ip=$(oc get svc/jdg-app-x-site --template="$OPEN_CURLY{range .status.loadBalancer.ingress}}$OPEN_CURLY{.hostname}}$OPEN_CURLY{end}}")
-counter=120
+counter=240
 while [ x"$external_ip" == "x" ] || [ "<no value>" == "$external_ip" ]; do
    external_ip=$(oc get svc/jdg-app-x-site --template="$OPEN_CURLY{range .status.loadBalancer.ingress}}$OPEN_CURLY{.hostname}}$OPEN_CURLY{end}}")
    if [ "<no value>" == "$external_ip" ]; then

@@ -10,6 +10,9 @@
   shell: oc delete all --selector=app=jdg-schema-keeper --timeout=1s
   ignore_errors: yes
 
+- name: Import image
+  shell: oc import-image --confirm galderz/scavenger-schemaer
+
 - name: Create Schema Keeper
   shell: oc new-app --docker-image="galderz/scavenger-schemaer" --name=jdg-schema-keeper -e HOTROD_SERVICE_NAME=jdg-app-hotrod -e SCHEMA_CHECK_DELAY=60000
 
