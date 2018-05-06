@@ -343,7 +343,7 @@
       "description": "Infinispan image.",
       "name": "IMAGE",
       "required": true,
-      "value": "slaskawi/jdg-summit"
+      "value": "slaskawi/jdg-summit-2"
     },
     {
       "description": "Number of instances in the cluster.",
