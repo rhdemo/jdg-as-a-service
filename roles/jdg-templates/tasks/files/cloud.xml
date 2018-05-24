@@ -273,37 +273,15 @@
          <cache-container name="clustered" default-cache="default" statistics="true">
             <transport lock-timeout="60000" />
             <global-state/>
-            <replicated-cache-configuration name="replicated">
-               <backups>
-                  <backup site="Private" strategy="ASYNC" timeout="240000"/>
-                  <backup site="Azure" strategy="ASYNC" timeout="240000"/>
-                  <backup site="Amazon" strategy="ASYNC" timeout="240000"/>
-               </backups>
-            </replicated-cache-configuration>
-            <distributed-cache-configuration name="distributed">
-               <backups>
-                  <backup site="Private" strategy="ASYNC" timeout="240000"/>
-                  <backup site="Azure" strategy="ASYNC" timeout="240000"/>
-                  <backup site="Amazon" strategy="ASYNC" timeout="240000"/>
-               </backups>
-            </distributed-cache-configuration>
+            <replicated-cache-configuration name="replicated"/>
+            <distributed-cache-configuration name="distributed"/>
             <distributed-cache-configuration name="indexed">
-               <backups>
-                  <backup site="Private" strategy="ASYNC" timeout="240000"/>
-                  <backup site="Azure" strategy="ASYNC" timeout="240000"/>
-                  <backup site="Amazon" strategy="ASYNC" timeout="240000"/>
-               </backups>
                <indexing index="LOCAL" auto-config="true"/>
             </distributed-cache-configuration>
             <!-- https://github.com/keycloak/keycloak-documentation/blob/master/server_installation/topics/operating-mode/crossdc.adoc -->
             <replicated-cache-configuration name="sessions-cfg" mode="SYNC" start="EAGER" batching="false">
                <transaction mode="NON_DURABLE_XA" locking="PESSIMISTIC"/>
                <locking acquire-timeout="0" />
-               <backups>
-                  <backup site="Private" strategy="ASYNC" timeout="240000"/>
-                  <backup site="Azure" strategy="ASYNC" timeout="240000"/>
-                  <backup site="Amazon" strategy="ASYNC" timeout="240000"/>
-               </backups>
             </replicated-cache-configuration>
             <!-- Temporary, will be exported to *-configuration as soon as we know what caches are needed -->
 
@@ -366,34 +344,8 @@
       <subsystem xmlns="urn:infinispan:server:jgroups:9.2">
          <channels default="cluster">
             <channel name="cluster"/>
-            <channel name="global" stack="relay-global"/>
          </channels>
          <stacks default="${jboss.default.jgroups.stack:kubernetes}">
-            <stack name="relay-global">
-               <transport type="TCP" socket-binding="jgroups-tcp-relay">
-                  <property name="external_addr">${jboss.bind.ext_address:127.0.0.1}</property>
-               </transport>
-               <protocol type="TCPPING">
-                  <property name="initial_hosts">${jboss.relay.global_cluster:127.0.0.1[55200]}</property>
-               </protocol>
-               <protocol type="MERGE3"/>
-               <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd">
-                  <property name="external_addr">${jboss.bind.ext_address:127.0.0.1}</property>
-               </protocol>
-               <protocol type="FD_ALL">
-                  <!-- The timeout after which we suspect P -->
-                  <!-- Let use 3 mins = 180 s -->
-                  <property name="timeout">180000</property>
-               </protocol>
-               <protocol type="VERIFY_SUSPECT"/>
-               <protocol type="pbcast.NAKACK2">
-                  <property name="use_mcast_xmit">false</property>
-               </protocol>
-               <protocol type="UNICAST3"/>
-               <protocol type="pbcast.STABLE"/>
-               <protocol type="pbcast.GMS"/>
-               <protocol type="MFC"/>
-            </stack>
             <stack name="kubernetes">
                <transport type="TCP" socket-binding="jgroups-tcp">
                   <property name="logical_addr_cache_expiration">360000</property>
@@ -411,13 +363,6 @@
                <protocol type="pbcast.GMS"/>
                <protocol type="MFC"/>
                <protocol type="FRAG3"/>
-               <relay site="${jboss.relay.site:stage}">
-                  <remote-site name="Azure" stack="relay-global" cluster="global"/>
-                  <remote-site name="Amazon" stack="relay-global" cluster="global"/>
-                  <remote-site name="Private" stack="relay-global" cluster="global"/>
-                  <property name="relay_multicasts">false</property>
-                  <property name="max_site_masters">1000</property>
-               </relay>
             </stack>
          </stacks>
       </subsystem>
