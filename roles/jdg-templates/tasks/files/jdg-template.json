@@ -350,7 +350,7 @@
       "name": "NUMBER_OF_INSTANCES",
       "displayName": "Number of Instances",
       "required": true,
-      "value": "1"
+      "value": "3"
     },
     {
       "description": "Total container memory in MiB.",
