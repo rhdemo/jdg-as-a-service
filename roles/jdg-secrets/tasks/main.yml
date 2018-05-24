@@ -10,28 +10,29 @@
   shell: ./roles/jdg-secrets/tasks/external-ip.sh
   register: _stage_lb_ip
 
-- name: Log into proper cluster
-  shell: oc login {{aws_openshift_host}} --token={{aws_openshift_token}} --insecure-skip-tls-verify=true
-
-- name: Switch to proper project
-  shell: oc project {{aws_jdg_project}}
-
-- name: Get AWS LB address
-  shell: ./roles/jdg-secrets/tasks/external-ip.sh
-  register: _aws_lb_ip
-
-- name: Log into proper cluster
-  shell: oc login {{azure_openshift_host}} --token={{azure_openshift_token}} --insecure-skip-tls-verify=true
-
-- name: Switch to proper project
-  shell: oc project {{azure_jdg_project}}
-
-- name: Get Azure LB address
-  shell: ./roles/jdg-secrets/tasks/external-ip.sh
-  register: _azure_lb_ip
+#- name: Log into proper cluster
+#  shell: oc login {{aws_openshift_host}} --token={{aws_openshift_token}} --insecure-skip-tls-verify=true
+#
+#- name: Switch to proper project
+#  shell: oc project {{aws_jdg_project}}
+#
+#- name: Get AWS LB address
+#  shell: ./roles/jdg-secrets/tasks/external-ip.sh
+#  register: _aws_lb_ip
+#
+#- name: Log into proper cluster
+#  shell: oc login {{azure_openshift_host}} --token={{azure_openshift_token}} --insecure-skip-tls-verify=true
+#
+#- name: Switch to proper project
+#  shell: oc project {{azure_jdg_project}}
+#
+#- name: Get Azure LB address
+#  shell: ./roles/jdg-secrets/tasks/external-ip.sh
+#  register: _azure_lb_ip
 
 - debug:
-    msg: "Stage IP {{ _stage_lb_ip.stdout }}, AWS IP {{ _aws_lb_ip.stdout }}, Azure IP {{ _azure_lb_ip.stdout }}"
+#    msg: "Stage IP {{ _stage_lb_ip.stdout }}, AWS IP {{ _aws_lb_ip.stdout }}, Azure IP {{ _azure_lb_ip.stdout }}"
+    msg: "Stage IP {{ _stage_lb_ip.stdout }}"
 
 - name: Setting secret values for Stage cluster
   set_fact:
@@ -40,37 +41,38 @@
     jdg_project: "{{ stage_jdg_project }}"
     site: "Private"
     external_address: "{{ _stage_lb_ip.stdout }}"
-    discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
+#    discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
+    discovery_string: "{{ _stage_lb_ip.stdout }}[55200][55200]"
 
 - debug:
     msg: "State External address {{ external_address }}, discovery string {{ discovery_string }}"
 
 - include: create-secret.yml
 
-- name: Setting secret values for AWS cluster
-  set_fact:
-    openshift_host: "{{ aws_openshift_host }}"
-    openshift_token: "{{ aws_openshift_token }}"
-    jdg_project: "{{ aws_jdg_project }}"
-    site: "Amazon"
-    external_address: "{{ _aws_lb_ip.stdout }}"
-    discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
-
-- debug:
-    msg: "State External address {{ external_address }}, discovery string {{ discovery_string }}"
-
-- include: create-secret.yml
-
-- name: Setting secret values for Azure cluster
-  set_fact:
-    openshift_host: "{{ azure_openshift_host }}"
-    openshift_token: "{{ azure_openshift_token }}"
-    jdg_project: "{{ azure_jdg_project }}"
-    site: "Azure"
-    external_address: "{{ _azure_lb_ip.stdout }}"
-    discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
-
-- debug:
-    msg: "State External address {{ external_address }}, discovery string {{ discovery_string }}"
-
-- include: create-secret.yml
+#- name: Setting secret values for AWS cluster
+#  set_fact:
+#    openshift_host: "{{ aws_openshift_host }}"
+#    openshift_token: "{{ aws_openshift_token }}"
+#    jdg_project: "{{ aws_jdg_project }}"
+#    site: "Amazon"
+#    external_address: "{{ _aws_lb_ip.stdout }}"
+#    discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
+#
+#- debug:
+#    msg: "State External address {{ external_address }}, discovery string {{ discovery_string }}"
+#
+#- include: create-secret.yml
+#
+#- name: Setting secret values for Azure cluster
+#  set_fact:
+#    openshift_host: "{{ azure_openshift_host }}"
+#    openshift_token: "{{ azure_openshift_token }}"
+#    jdg_project: "{{ azure_jdg_project }}"
+#    site: "Azure"
+#    external_address: "{{ _azure_lb_ip.stdout }}"
+#    discovery_string: "{{ _stage_lb_ip.stdout }}[55200],{{ _aws_lb_ip.stdout }}[55200],{{ _azure_lb_ip.stdout }}[55200]"
+#
+#- debug:
+#    msg: "State External address {{ external_address }}, discovery string {{ discovery_string }}"
+#
+#- include: create-secret.yml
