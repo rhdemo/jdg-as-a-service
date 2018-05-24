@@ -357,7 +357,7 @@
       "displayName": "Total Memory",
       "name": "TOTAL_CONTAINER_MEM",
       "required": false,
-      "value": "3072"
+      "value": "512"
     },
     {
       "description": "Username for accessing management console.",
