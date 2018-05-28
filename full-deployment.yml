@@ -8,7 +8,7 @@
    - jdg-create-projects
 #   - jdg-load-balancers
    - jdg-services
-   - jdg-secrets
+#   - jdg-secrets
    - jdg-templates
    - jdg-app
    - jdg-create-perf-tester

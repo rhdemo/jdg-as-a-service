@@ -175,9 +175,6 @@
                   "-b",
                   "$(IP)",
                   "-Djboss.default.jgroups.stack=kubernetes",
-                  "-Djboss.bind.ext_address=$(EXT_ADDR)",
-                  "-Djboss.relay.site=$(SITE)",
-                  "-Djboss.relay.global_cluster=$(DISCOVERY)",
                   "--debug"
                 ],
                 "env": [
@@ -214,33 +211,6 @@
                     "valueFrom": {
                       "fieldRef": {
                         "fieldPath": "status.podIP"
-                      }
-                    }
-                  },
-                  {
-                    "name": "EXT_ADDR",
-                    "valueFrom": {
-                      "secretKeyRef": {
-                        "name": "jdg-app",
-                        "key": "EXT_ADDR"
-                      }
-                    }
-                  },
-                  {
-                    "name": "SITE",
-                    "valueFrom": {
-                      "secretKeyRef": {
-                        "name": "jdg-app",
-                        "key": "SITE"
-                      }
-                    }
-                  },
-                  {
-                    "name": "DISCOVERY",
-                    "valueFrom": {
-                      "secretKeyRef": {
-                        "name": "jdg-app",
-                        "key": "DISCOVERY"
                       }
                     }
                   }
